@@ -1,0 +1,78 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no" ?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+
+    <changeSet id="20220628-1_create_user_central_schema" author="Lucian Cochior-Heghi">
+        <sql>
+            CREATE SCHEMA user_central;
+        </sql>
+    </changeSet>
+
+    <changeSet id="20220628-2_create_user_and_role_tables" author="Lucian Cochior-Heghi">
+        <sql>
+            CREATE TYPE user_central.role_name as ENUM('ROLE_ADMIN', 'ROLE_USER');
+        </sql>
+
+        <createTable schemaName="user_central" tableName="user">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="user_id_pk"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="username" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addUniqueConstraint schemaName="user_central" tableName="user" columnNames="email"
+                            constraintName="unique_user_email"/>
+        <createSequence sequenceName="user_id_sequence" schemaName="user_central" startValue="1" incrementBy="50"/>
+
+        <createTable schemaName="user_central" tableName="role">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="role_id_pk"/>
+            </column>
+            <column name="name" type="user_central.role_name">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addUniqueConstraint schemaName="user_central" tableName="role" columnNames="name"
+                            constraintName="unique_role_name"/>
+        <createSequence sequenceName="role_id_sequence" schemaName="user_central" startValue="1" incrementBy="50"/>
+
+        <createTable schemaName="user_central" tableName="user_role">
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint constraintName="user_id_to_user_fk"
+                                 baseTableSchemaName="user_central"
+                                 baseTableName="user_role"
+                                 baseColumnNames="user_id"
+                                 referencedTableSchemaName="user_central"
+                                 referencedTableName="user"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint constraintName="role_id_to_role_fk"
+                                 baseTableSchemaName="user_central"
+                                 baseTableName="user_role"
+                                 baseColumnNames="role_id"
+                                 referencedTableSchemaName="user_central"
+                                 referencedTableName="role"
+                                 referencedColumnNames="id"/>
+
+    </changeSet>
+</databaseChangeLog>

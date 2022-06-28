@@ -31,10 +31,16 @@
             <column name="password" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
+            <column defaultValueComputed="LOCALTIMESTAMP" name="created_at" type="TIMESTAMP WITHOUT TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueComputed="LOCALTIMESTAMP" name="updated_at" type="TIMESTAMP WITHOUT TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
 
         <addUniqueConstraint schemaName="user_central" tableName="user" columnNames="email"
-                            constraintName="unique_user_email"/>
+                             constraintName="unique_user_email"/>
         <createSequence sequenceName="user_id_sequence" schemaName="user_central" startValue="1" incrementBy="50"/>
 
         <createTable schemaName="user_central" tableName="role">
@@ -47,8 +53,9 @@
         </createTable>
 
         <addUniqueConstraint schemaName="user_central" tableName="role" columnNames="name"
-                            constraintName="unique_role_name"/>
+                             constraintName="unique_role_name"/>
         <createSequence sequenceName="role_id_sequence" schemaName="user_central" startValue="1" incrementBy="50"/>
+        <sql>ALTER TABLE user_central.role ALTER COLUMN id SET DEFAULT NEXTVAL('user_central.role_id_sequence');</sql>
 
         <createTable schemaName="user_central" tableName="user_role">
             <column name="user_id" type="BIGINT">

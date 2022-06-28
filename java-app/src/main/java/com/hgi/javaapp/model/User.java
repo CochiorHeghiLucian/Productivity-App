@@ -9,6 +9,7 @@ import org.hibernate.annotations.NaturalId;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -38,8 +39,12 @@ public class User extends DateAudit {
     private String password;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "user_role",
+    @JoinTable(name = "user_role", schema = "user_central",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
+
+    public User(String name, String username, String email, String password) {
+        this(null, name, username, email, password, Collections.emptySet());
+    }
 }

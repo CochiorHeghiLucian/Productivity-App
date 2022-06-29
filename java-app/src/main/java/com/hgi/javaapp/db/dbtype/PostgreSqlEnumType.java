@@ -11,7 +11,8 @@ import static java.sql.Types.OTHER;
 
 public class PostgreSqlEnumType<T extends Enum<?>> extends EnumType<T> {
     @Override
-    public void nullSafeSet(PreparedStatement st, Object value, int index, SharedSessionContractImplementor session) throws HibernateException, SQLException {
+    public void nullSafeSet(PreparedStatement st, Object value, int index, SharedSessionContractImplementor session) throws HibernateException,
+            SQLException {
         if (value == null) {
             st.setNull(index, OTHER);
         } else {

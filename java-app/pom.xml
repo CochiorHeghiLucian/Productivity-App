@@ -14,6 +14,10 @@
     <name>java-app</name>
     <description>Demo project for Spring Boot</description>
     <properties>
+        <!--        Plugin Properties-->
+        <maven-checkstyle-plugin.version>3.1.1</maven-checkstyle-plugin.version>
+        <puppycrawl-checkstyle.version>8.36.1</puppycrawl-checkstyle.version>
+
         <java.version>18</java.version>
         <jjwt.version>0.11.2</jjwt.version>
         <liquibase.version>3.10.3</liquibase.version>
@@ -87,6 +91,35 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>${maven-checkstyle-plugin.version}</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.puppycrawl.tools</groupId>
+                        <artifactId>checkstyle</artifactId>
+                        <version>${puppycrawl-checkstyle.version}</version>
+                    </dependency>
+                </dependencies>
+
+                <executions>
+                    <execution>
+                        <id>validate</id>
+                        <phase>validate</phase>
+                        <configuration>
+                            <configLocation>checkstyle-hgi.xml</configLocation>
+                            <encoding>UTF-8</encoding>
+                            <consoleOutput>true</consoleOutput>
+                            <failsOnError>true</failsOnError>
+                        </configuration>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
